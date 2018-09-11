@@ -17,59 +17,67 @@ import java.util.Random;
  * @Author: liweihai
  * @Date: Created in 2018/9/11 14:08
  */
-public class ValidateImageServlet1 extends HttpServlet {
+public class ValidateImageServlet2 extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Pragma", "nocache");// 禁止图像缓存,使得单击验证码可以刷新验证码图片
-        resp.setHeader("Cache-Control", "no-cache");
-        resp.setDateHeader("Expires", 0);
-        resp.setContentType("image/jpeg");
-        BufferedImage bim = new BufferedImage(85, 35, BufferedImage.TYPE_INT_RGB);
-        Graphics2D gc = bim.createGraphics();
-        Font font = new Font("Times New Roman", Font.PLAIN, 28);
-        gc.setColor(Color.yellow);// 设置图片填充颜色
-        gc.fillRect(0, 0, 85, 35);
-
-        gc.setColor(Color.pink);// 设置边框颜色
-        gc.drawRect(0, 0, 69, 19);
-        gc.setFont(font);
-        Random rand = new Random();// 产生4位随机数
-        StringBuffer sb = new StringBuffer();
-        gc.setColor(Color.cyan);// 设置干扰线颜色
-        for (int j = 0; j < 30; j++) {
-            int x = rand.nextInt(70);
-            int y = rand.nextInt(70);
-            int x1 = rand.nextInt(60);
-            int y1 = rand.nextInt(60);
-
-            gc.drawLine(x, y, x + x1, y + y1);// 往图片里面画干扰线
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Pragma", "No-cache");// 设置页面不缓存
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        int width = 90, height = 35;// 在内存中创建图象
+        BufferedImage image = new BufferedImage(width, height,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();// 获取图形上下文
+        Random random = new Random();// 生成随机类
+        g.setColor(getRandColor(220, 250));// 设定背景色
+        g.fillRect(0, 0, width, height);
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 28));// 设定字体
+        g.draw3DRect(0, 0, width - 1, height - 1, true);// 画边框//
+        // g.drawRect(0,0,width-1,height-1);
+        g.setColor(getRandColor(160, 200)); // 随机产生155条干扰线，使图象中的认证码不易被其它程序探测到
+        for (int i = 0; i < 155; i++) {
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
+            int xl = random.nextInt(12);
+            int yl = random.nextInt(12);
+            g.drawLine(x, y, x + xl, y + yl);
         }
-
+        // 取随机产生的认证码(6位数字)
         String sRand = "";
-        String ctmp = "";
-        int itmp = 0;
-        for (int i = 0; i < 4; i++) {
-            switch (rand.nextInt(2)) {
-                case 1:
-                    itmp = rand.nextInt(26) + 65; // 生成A~Z的字母
-                    ctmp = String.valueOf((char) itmp);
-                    break;
-                default:
-                    itmp = rand.nextInt(10) + 48; // 生成0~9的数字
-                    ctmp = String.valueOf((char) itmp);
-                    break;
-            }
+        String s = "012345678901234567890123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ012345678901234567890123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            gc.setColor(Color.RED);// 设置字体颜色
-            gc.drawString(ctmp, i * 18 + 8, 25);//上下左右居中位置
-            sb.append(ctmp);
+        for (int i = 0, a = s.length(); i < 4; i++) {
+            char rand = s.charAt(random.nextInt(a));
+            sRand += rand;
+            g.setColor(new Color(20 + random.nextInt(110), 20 + random
+                    .nextInt(110), 20 + random.nextInt(110)));// 将认证码显示到图象中
+            g.drawString(String.valueOf(rand), 18 * i + 8, 25);// 调用函数出来的颜色相同，可能是因为种子太接近，所以只能直接生成
         }
-        String sb1 = String.valueOf(sb);// 将stringbuffer转成string
+        g.drawOval(0, 12, 60, 11);
+        request.getSession().setAttribute("rand", sRand);// 将认证码存入SESSION
+        g.dispose();// 图象生效
+        ServletOutputStream output = null;
+        try {
+            output = response.getOutputStream();
+            ImageIO.write(image, "JPEG", output);// 输出图象到页面
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            output.close();
+        }
 
-        req.getSession().setAttribute("code", sb1);// 将生成的验证码的值放到session中去
-
-        ServletOutputStream sos = resp.getOutputStream();// 将图片以流的形式输出
-        ImageIO.write(bim, "jpg", sos);
-        sos.close();
+    }
+    /**
+     * 生成随机颜色
+     */
+    private Color getRandColor(int fc, int bc) {
+        Random random = new Random();
+        if (fc > 255)
+            fc = 255;
+        if (bc > 255)
+            bc = 255;
+        int r = fc + random.nextInt(bc - fc);
+        int g = fc + random.nextInt(bc - fc);
+        int b = fc + random.nextInt(bc - fc);
+        return new Color(r, g, b);
     }
 }

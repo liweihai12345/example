@@ -40,6 +40,36 @@ public class JsonResult<T> implements Serializable{
 		this.detailMsg= detailMsg;
 	}
 
+	// 返回错误+信息：操作失败
+	public static <T> JsonResult<T> resultError(){return resultError("操作失败");}
+	// 返回错误+信息参数
+	public static <T> JsonResult<T> resultError(String message) {
+		
+		return new JsonResult<T>(false,message);
+	}
+	// 创建错误+信息参数+详细信息参数
+	public static <T> JsonResult<T> createErrorMsg(String message,String detailMsg){
+		
+		return new JsonResult<T>(false,message,detailMsg);
+	}
+	// 返回非业务或非逻辑错误以外的其他异常
+	public static <T>JsonResult<T> resultBizExceptionError(Exception e,String defaultErrorMessage){
+		return !(e instanceof BizException)&& !(e instanceof ViewException)? new JsonResult<T>(false,defaultErrorMessage):new JsonResult<T>(false,e.getMessage());
+	}
+	// 返回成功信息
+	public static <T> JsonResult<T> resultSuccess(){
+		return resultSuccess("操作成功",null);
+	}
+	// 返回成功信息+结果
+	public static <T> JsonResult <T> resultSuccess(T obj){
+		return resultSuccess("操作成功",obj);
+	}
+	//最终返回成功
+	public static <T> JsonResult<T> resultSuccess(String message, T object) {
+		
+		return new JsonResult<T>(true,message,object);
+	}
+
 	public Boolean getSuccess() {
 		return success;
 	}
@@ -71,34 +101,4 @@ public class JsonResult<T> implements Serializable{
 	public void setDetailMsg(String detailMsg) {
 		this.detailMsg = detailMsg;
 	}
-	// 返回错误+信息：操作失败
-	public static <T> JsonResult<T> resultError(){return resultError("操作失败");}
-	// 返回错误+信息参数
-	public static <T> JsonResult<T> resultError(String message) {
-		
-		return new JsonResult<T>(false,message);
-	}
-	// 创建错误+信息参数+详细信息参数
-	public static <T> JsonResult<T> createErrorMsg(String message,String detailMsg){
-		
-		return new JsonResult<T>(false,message,detailMsg);
-	}
-	// 返回非业务或非逻辑错误以外的其他异常
-	public static <T>JsonResult<T> resultBizExceptionError(Exception e,String defaultErrorMessage){
-		return !(e instanceof BizException)&& !(e instanceof ViewException)? new JsonResult<T>(false,defaultErrorMessage):new JsonResult<T>(false,e.getMessage());
-	}
-	// 返回成功信息
-	public static <T> JsonResult<T> resultSuccess(){
-		return resultSuccess("操作成功",null);
-	}
-	// 返回成功信息+结果
-	public static <T> JsonResult <T> resultSuccess(T obj){
-		return resultSuccess("操作成功",obj);
-	}
-	//最终返回成功
-	public static <T> JsonResult<T> resultSuccess(String message, T object) {
-		
-		return new JsonResult<T>(true,message,object);
-	}
-	
 }
