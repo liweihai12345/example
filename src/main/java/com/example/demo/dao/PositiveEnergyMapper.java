@@ -1,7 +1,6 @@
 package com.example.demo.dao;
 
 import com.example.demo.model.PositiveEnergyDO;
-import com.platform.entity.PositiveEnergyDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
