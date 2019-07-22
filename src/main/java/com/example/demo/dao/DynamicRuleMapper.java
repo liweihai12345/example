@@ -2,8 +2,6 @@ package com.example.demo.dao;
 
 import com.example.demo.model.DynamicRuleDO;
 import com.example.demo.vo.EnergyTaskVO;
-import com.platform.entity.DynamicRuleDO;
-import com.platform.vo.EnergyTaskVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
