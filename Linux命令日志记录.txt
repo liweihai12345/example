@@ -1,0 +1,148 @@
+AWK文本编辑软件
+which awk    // 查看awk路径
+yum install gawk // 安装awk
+which awk// 再次执行 显示awk路径
+last -n 5  //举例显示最近5条登陆信息
+last -n 5 | awk '{print$1}' //打印前五条第一列
+ 
+ 
+ 
+Access denied 错误
+sudo vim /etc/ssh/sshd_config
+ 
+ redis 安装
+ gcc -v  
+ 
+ tar xzf redis-4.0.14.tar.gz
+ mv redis-4.0.14 redis
+ mv /usr/local/redis
+ cd redis 
+ make
+ cd srcr
+ make test
+ vim redis.conf
+ protected-mode no
+ daemonize yes
+ logfile "/usr/local/redis/redis-4.0.12/logs/redis.log"  # 需要先创建文件加跟文件
+ requirepass foobared
+ 
+redis-cd  redis.conf
+kill - 9 pid
+cd /
+
+mkdir /etc/redis/
+
+mv redis.conf /etc/redis/
+redis-server redis.conf
+ubuntu18.04安装 网络配置
+sudo passwd root 修改root密码
+cd /etc/netplan
+network:
+    ethernets: 
+        enp1s0:
+            dhcp4: no
+            addresses: [172.18.103.118/24]
+            gateway4: 172.18.103.1
+    version: 2
+配置DNS
+vim /etc/resolv.conf
+nameserver 114.114.114.114
+nameserver 8.8.8.8
+安装openssh-server
+vi/etc/ssh/sshd_config
+修改 port 去掉#
+添加
+PermitRootLogin yes
+
+
+
+ubuntu 权限 
+sudo apt-get install gedit  安装命令
+
+无法上传 sudo chmod -R 777 /home
+sudo tar -zxvf jdk 
+sudo mv jdk1.8.0_191/ /usr/local/lib
+sudo tar -zxvf redis-5.0.5.tar.gz
+sudo mv redis-5.0.5 redis
+sudo mv redis /usr/local/lib
+sudo tar -zxvf mongodb-linux-x86_64-3.0.6.tgz
+sudo apt install gcc
+
+cd /usr/local/redis/
+make  编译
+sudo apt install make 安装make
+
+sudo make MALLOC=libc 重新编译
+cd src  ./redis-server
+make test
+下载(缺少tcl)
+wget http://downloads.sourceforge.net/tcl/tcl8.6.1-src.tar.gz
+cd unix
+./configure 
+make
+make install  tcl 安装完成
+cd /src
+make test
+ vim redis.conf
+ protected-mode no
+ daemonize yes
+ logfile "/usr/local/redis/redis-4.0.12/logs/redis.log"  # 需要先创建文件加跟文件
+ requirepass foobared
+ 
+cd /
+
+mkdir /etc/redis/
+mv redis.conf /etc/redis/
+redis-server redis.conf
+
+find -name redis-server
+redis-server /etc/redis/redis.conf
+
+mongodb 安装
+mkdir -p /data/db
+mkdir -p /logs/mongodb.log
+export PATH=/usr/local/mongodb3.0.6/bin:$PATH
+
+vim mongodb.conf
+dbpath = /data/db/
+logpath= /logs/mongodb.log
+logappend= true
+port = 27017
+fork = true
+root@qianlima:/usr/local/mongodb3.0.6/bin# mongod -f /usr/local/mongodb3.0.6/mongodb.conf
+
+成功后
+
+about to fork child process, waiting until server is ready for connections.
+forked process: 8914
+child process started successfully, parent exiting
+
+
+jdk 安装
+
+ sudo gedit ~/.bashrc
+ 
+JAVA_HOME=/home/apneng/jdk1.8.0_171
+
+JRE_HOME=${JAVA_HOME}/jre
+
+CLASSPATH=${JAVA_HOME}/lib: ${JRE_HOME}/lib
+
+PATH=${JAVA_HOME}/bin: ${JRE_HOME}/bin:$PATH
+
+export JAVA_HOME JRE_HOME CLASSPATH PATH
+正确配置
+vim /etc/profile
+export JAVA_HOME=/usr/lib/jdk/jdk1.8.0_171
+export JRE_HOME=${JAVA_HOME}/jre    
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib    
+export PATH=${JAVA_HOME}/bin:$PATH 
+source /etc/profile 
+
+时间同步
+设定时区：dpkg-reconfigure tzdata
+
+           选择Asia -> 再选择Shanghai -> OK
+apt install ntpdate 安装
+ntpdate cn.pool.ntp.org  同步
+
